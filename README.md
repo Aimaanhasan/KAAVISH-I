@@ -10,7 +10,7 @@ In this project, we develop a mobile application which uses gamification and aug
 
 
 
-
+# Project Components 
 The project has 3 components to it:
 
 1- The Game Development Component which consists of working with Unity using C# scripting.
