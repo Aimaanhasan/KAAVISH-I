@@ -17,8 +17,8 @@ The project has 3 components to it:
 
 2- The second component consists of integrating Augment Reality for image tracking in order to detect the cards and generate real time code.
 
-3- The third component of the project is about generating a language using Compiler Construction.
+3- The third component of the project is about generating a C# source program from Augmented Images using Compiler Construction techniques. 
 
-The parts are divided among the project partners Aiman Hasan, Hamza Masroor and Hasan Rizvi respectively.
+The parts are divided among the project partners Aiman Hasan, Hamza Masroor and Syed Muhammad Hasan respectively.
 
 
