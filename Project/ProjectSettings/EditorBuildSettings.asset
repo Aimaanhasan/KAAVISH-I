@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 48c043673f252354797d4325ca548f0e
   - enabled: 0
-    path: Assets/Scenes/ChapterLevels.unity
-    guid: 339285ccbbf211e419306ac5687d13b7
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Chapters.unity
     guid: 3b208b0ae213fb6408dad5a3dd8792e5
@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/GoogleARCore/Examples/HelloAR/Scenes/HelloAR.unity
     guid: e6a6fa04348cb45c9b0221eb19c946da
+  - enabled: 1
+    path: Assets/Scenes/Levels.unity
+    guid: 0ea36d75f8d82f44b87474eda40cd768
   m_configObjects: {}

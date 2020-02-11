@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DragonController : MonoBehaviour
 {
@@ -10,7 +12,22 @@ public class DragonController : MonoBehaviour
     public float moveSpeed = 0.5F;
     bool routineRunning;
     Node rootNode;
+    
+    public TextMeshProUGUI text;
+    public GameObject canvas;
     bool firstCardAppeared = false;
+
+    public void activateCanvas()
+    {
+        if (canvas.activeSelf)
+        {
+            canvas.SetActive(false);
+        }
+        else
+        {
+            canvas.SetActive(true);
+        }
+    }
     IEnumerator RotateMe(Vector3 byAngles, float inTime)
     {
         while (routineRunning)
@@ -66,7 +83,11 @@ public class DragonController : MonoBehaviour
         }
         detect[] detects = FindObjectsOfType<detect>();
         if (detects.Length > 0)
-        { rootNode = detects[detects.Length - 1].node; }
+        {
+            rootNode = detects[detects.Length - 1].node;
+            if (canvas.activeSelf)
+                text.text = processNodeText(rootNode, 10);
+        }
 
     }
 
@@ -111,41 +132,90 @@ public class DragonController : MonoBehaviour
         a.right.down.right = new Node("4");
         a.right.down.right.down = new Node("moveForward()");
         a.right.down.down = new Node("rotateRight()");
+        Debug.Log(processNodeText(a, 10));
 
 
     }
 
     public void processNode(Node input_node)
     {
-        
+        Debug.Log("processss");
         Node temp = input_node;
         while (temp != null)
         {
-            Debug.Log(temp.code);
-            if (temp.code == "moveForward()")
+            if (temp.code == "LOOP")
+            {
+                //count--;
+                processLoop(temp);
+            }
+
+            else if (temp.code == "moveForward()")
+            {
+                MoveForward();
+            }
+
+            else if (temp.code == "moveBackward()")
             {
                 
-                MoveForward();
+            }
+
+            else if (temp.code == "rotateLeft()")
+            {
+                RotateLeft();
             }
 
             else if (temp.code == "rotateRight()")
             {
                 RotateRight();
             }
-            else if (temp.code == "rotateLeft()")
-            {
-                RotateLeft();
-            }
-
-            else if (temp.code == "LOOP")
-            {
-                processLoop(temp);
-            }
             temp = temp.down;
         }
+    }
+    public string processNodeText(Node input_node, int count)
+    {
+        string code = "";
+        Node temp = input_node;
+        while (temp != null)
+        {
+            if (temp.code == "LOOP")
+            {
+                
+                code += processLoopText(temp, --count) + "\n";
+            }
+            else
+                code += temp.code + "\n";
+
+            temp = temp.down;
+        }
+        return code;
         
         
     }
+
+    private string processLoopText(Node temp, int count1)
+    {
+        if (count1 == 0)
+            return null;
+        string code = "";
+        if (temp.right != null)
+        {
+            int count = 0;
+            try
+            {
+                count = Int32.Parse(temp.right.code);
+            }
+
+            catch
+            {
+                Debug.Log("");
+            }
+             
+            code = "for (int i = 0; i <" + count + "; i++) \n {";
+            code = code + processNodeText(temp.right.down, --count1) + "}";
+        }
+        return code;
+    }
+
     public void run()
     {
         if (rootNode != null)

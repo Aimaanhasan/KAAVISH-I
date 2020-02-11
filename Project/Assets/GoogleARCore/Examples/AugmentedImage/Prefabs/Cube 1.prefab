@@ -34,7 +34,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
-  - {fileID: 2578410142345387711}
+  - {fileID: 8440645060757392483}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -94,8 +94,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.9927623, y: 1.0118039, z: 0.9895326}
-  m_Center: {x: -0.0009264983, y: 0.0059021264, z: 0.9600591}
+  m_Size: {x: 0.28511736, y: 1.0118039, z: 1.2372918}
+  m_Center: {x: 0.015357118, y: 0.0059021264, z: 1.0839387}
 --- !u!136 &8767035224888401398
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -106,10 +106,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.47358707
+  m_Radius: 0.33220246
   m_Height: 1.2851131
-  m_Direction: 1
-  m_Center: {x: -1.0252602, y: 0.08182779, z: -0.0033263117}
+  m_Direction: 0
+  m_Center: {x: -1.3772035, y: 0.08182779, z: 0.004317984}
 --- !u!135 &3149439805639336631
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578de6c511508694885ad678a0675e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: 6
+  text: LOOP
 --- !u!54 &3640051447331293414
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -152,7 +152,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!1001 &7400239455171999141
+--- !u!1001 &3483962265936340857
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -167,17 +167,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: e036a627774729648a636b59e3b68bd3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.36
+      value: -1.33
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e036a627774729648a636b59e3b68bd3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.73
+      value: 0.62
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e036a627774729648a636b59e3b68bd3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.02
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e036a627774729648a636b59e3b68bd3,
         type: 3}
@@ -232,13 +232,13 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: e036a627774729648a636b59e3b68bd3,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: -0.1
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e036a627774729648a636b59e3b68bd3, type: 3}
---- !u!4 &2578410142345387711 stripped
+--- !u!4 &8440645060757392483 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: e036a627774729648a636b59e3b68bd3,
     type: 3}
-  m_PrefabInstance: {fileID: 7400239455171999141}
+  m_PrefabInstance: {fileID: 3483962265936340857}
   m_PrefabAsset: {fileID: 0}

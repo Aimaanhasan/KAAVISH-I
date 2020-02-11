@@ -23,6 +23,14 @@ public class LevelLoader : MonoBehaviour
     {
         SceneManager.LoadScene("Credit");
     }
+    public void LevelsScene()
+    {
+        SceneManager.LoadScene("Levels");
+    }
+    public void PlayScene()
+    {
+        SceneManager.LoadScene(2);
+    }
     public void AchievementScene()
     {
         SceneManager.LoadScene(0);

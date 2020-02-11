@@ -105,8 +105,16 @@ namespace GoogleARCore.Examples.HelloAR
             TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon |
                 TrackableHitFlags.FeaturePointWithSurfaceNormal;
 
+            if (Session.Status == SessionStatus.LostTracking)
+            {
+                spawned = false;
+                var session = GameObject.Find("ARCore Device").GetComponent<ARCoreSession>(); session.SessionConfig.PlaneFindingMode = DetectedPlaneFindingMode.Horizontal; session.SessionConfig.EnablePlaneFinding = true; session.OnEnable();
+            }
+                
+
             if (Frame.Raycast(touch.position.x, touch.position.y, raycastFilter, out hit) && !spawned)
             {
+                var session = GameObject.Find("ARCore Device").GetComponent<ARCoreSession>(); session.SessionConfig.PlaneFindingMode = DetectedPlaneFindingMode.Disabled; session.SessionConfig.EnablePlaneFinding = false; session.OnEnable();
                 spawned = true;
                 // Use hit pose and camera pose to check if hittest is from the
                 // back of the plane, if it is, no need to create the anchor.
