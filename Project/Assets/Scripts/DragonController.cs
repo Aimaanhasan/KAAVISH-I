@@ -12,11 +12,14 @@ public class DragonController : MonoBehaviour
     public float moveSpeed = 0.5F;
     bool routineRunning;
     Node rootNode;
+    SphereCollider bodyCollider;
     
     public TextMeshProUGUI text;
     public GameObject canvas;
     bool firstCardAppeared = false;
 
+
+    
     public void activateCanvas()
     {
         if (canvas.activeSelf)
@@ -63,10 +66,27 @@ public class DragonController : MonoBehaviour
         routineRunning = false;
     }
 
+    IEnumerator FlyMe(float inTime)
+    {
+
+        while (routineRunning)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+        routineRunning = true;
+        for (var t = 0f; t < 0.0899; t += Time.deltaTime / inTime)
+        {
+            //Debug.Log("SAD");
+            Dragon.transform.Translate(Vector3.up * Mathf.Clamp(1 * 6, -1, 1) * moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+        routineRunning = false;
+    }
     void Update()
     {
+        
         if (Input.GetKeyDown("e"))
-        {
+        { 
             StartCoroutine(RotateMe(Vector3.up * 90, 0.8f));
         }
         if (Input.GetKeyDown("q"))
@@ -75,8 +95,11 @@ public class DragonController : MonoBehaviour
         }
         if (Input.GetKeyDown("w"))
         {
-            MoveForward();
+            Fly();
         }
+        if (Input.GetKeyDown("z"))
+            MoveForward();
+
         if(Input.GetKeyDown(KeyCode.Space))
         {
             run();
@@ -94,6 +117,11 @@ public class DragonController : MonoBehaviour
     void MoveForward()
     {
         StartCoroutine(MoveMe(0.8f));
+    }
+
+    void Fly()
+    {
+        StartCoroutine(FlyMe(0.8f));
     }
 
     void RotateRight()
@@ -235,8 +263,7 @@ public class DragonController : MonoBehaviour
         }
     }
 
-
-
+    
 
 
     // Update is called once per frame

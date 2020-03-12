@@ -29,9 +29,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/GoogleARCore/Examples/AugmentedImage/Scenes/AugmentedImage.unity
     guid: be567d47d3ab94b3badc5b211f535a24
-  - enabled: 1
-    path: Assets/GoogleARCore/Examples/HelloAR/Scenes/HelloAR.unity
+  - enabled: 0
+    path: Assets/Scenes/Level.unity
     guid: e6a6fa04348cb45c9b0221eb19c946da
+  - enabled: 1
+    path: Assets/Scenes/Level1.unity
+    guid: cfe893a91dee1d548bc48ffc006a1dbb
   - enabled: 1
     path: Assets/Scenes/Levels.unity
     guid: 0ea36d75f8d82f44b87474eda40cd768

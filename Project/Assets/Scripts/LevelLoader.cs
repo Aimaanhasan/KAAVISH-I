@@ -7,45 +7,54 @@ public class LevelLoader : MonoBehaviour
     public void LoadNextScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex + 1);
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync(currentSceneIndex + 1));
+        //SceneManager.LoadScene(currentSceneIndex + 1);
 
     }
     public void LoadPreviousScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex - 1);
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync(currentSceneIndex - 1));
     }
     public void LoadStartScene()
     {
-        SceneManager.LoadScene(6);
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync(6));
+        //SceneManager.LoadScene(6);
     }
     public void CreditsScene()
     {
-        SceneManager.LoadScene("Credit");
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("Credit"));
+        //SceneManager.LoadScene("Credit");
     }
     public void LevelsScene()
     {
-        SceneManager.LoadScene("Levels");
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("Levels"));
+        //SceneManager.LoadScene("Levels");
     }
     public void PlayScene()
     {
-        SceneManager.LoadScene(2);
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync(2));
+        //SceneManager.LoadScene(2);
     }
     public void AchievementScene()
     {
-        SceneManager.LoadScene(0);
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync(0));
+        //SceneManager.LoadScene(0);
     }
     public void SettingsScene()
     {
-        SceneManager.LoadScene("Settings");
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("Settings"));
+        //SceneManager.LoadScene("Settings");
     }
     public void HelpScene()
     {
-        SceneManager.LoadScene("HELP");
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync("HELP"));
+        //SceneManager.LoadScene("HELP");
     }
     public void LoadMenuScene()
     {
-        SceneManager.LoadScene(1);
+        LoadingScreen.Instance.Show(SceneManager.LoadSceneAsync(1));
+        //SceneManager.LoadScene(1);
     }
     public void ExitScreen()
     {
