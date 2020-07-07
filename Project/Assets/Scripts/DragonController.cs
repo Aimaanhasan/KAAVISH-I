@@ -15,21 +15,31 @@ public class DragonController : MonoBehaviour
     SphereCollider bodyCollider;
     
     public TextMeshProUGUI text;
+    public TextMeshProUGUI errorText;
     public GameObject canvas;
+    public GameObject errorCanvas;
     bool firstCardAppeared = false;
-
+    private int errors;
 
     
+
     public void activateCanvas()
     {
+        
         if (canvas.activeSelf)
         {
+            activateErrorCanvas(false);
             canvas.SetActive(false);
         }
         else
         {
             canvas.SetActive(true);
         }
+    }
+
+    public void activateErrorCanvas(bool activate)
+    {
+        errorCanvas.SetActive(activate);
     }
     IEnumerator RotateMe(Vector3 byAngles, float inTime)
     {
@@ -49,6 +59,21 @@ public class DragonController : MonoBehaviour
         routineRunning = false;
     }
 
+    IEnumerator Fire(float InTime)
+    {
+        while (routineRunning)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+        routineRunning = true;
+        FindObjectOfType<Dragon>().StartFire();
+        yield return new WaitForSeconds(InTime);
+        if (isCactusOnFront())
+            Destroy(FindObjectOfType<Cactus>().gameObject);
+        FindObjectOfType<Dragon>().StopFire();
+
+    }
+
     IEnumerator MoveMe(float inTime)
     {
         
@@ -59,7 +84,6 @@ public class DragonController : MonoBehaviour
         routineRunning = true;
         for (var t = 0f; t < 0.0899; t += Time.deltaTime / inTime)
         {
-            Debug.Log("SAD");
             Dragon.transform.Translate(Vector3.forward * Mathf.Clamp(1 * 6, -1, 1) * moveSpeed * Time.deltaTime);
             yield return null;
         }
@@ -98,11 +122,15 @@ public class DragonController : MonoBehaviour
             Fly();
         }
         if (Input.GetKeyDown("z"))
-            MoveForward();
+            moveForward();
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
             run();
+        }
+        if (Input.GetKeyDown("p"))
+        {
+            fire();
         }
         detect[] detects = FindObjectsOfType<detect>();
         if (detects.Length > 0)
@@ -114,23 +142,25 @@ public class DragonController : MonoBehaviour
 
     }
 
-    void MoveForward()
+    void moveForward()
     {
-        StartCoroutine(MoveMe(0.8f));
+        StartCoroutine(MoveMe(1f));
     }
 
     void Fly()
     {
-        StartCoroutine(FlyMe(0.8f));
+        
+        StartCoroutine(FlyMe(0.6f));
+        
     }
 
-    void RotateRight()
+    void rotateRight()
     {
         StartCoroutine(RotateMe(Vector3.up * 90, 0.8f));
 
     }
 
-    void RotateLeft()
+    void rotateLeft()
     {
         StartCoroutine(RotateMe(Vector3.up * -90, 0.8f));
     }
@@ -160,14 +190,31 @@ public class DragonController : MonoBehaviour
         a.right.down.right = new Node("4");
         a.right.down.right.down = new Node("moveForward()");
         a.right.down.down = new Node("rotateRight()");
-        Debug.Log(processNodeText(a, 10));
+        //Debug.Log(processNodeText(a, 10));
 
 
     }
 
+    public void processIf(Node input_node)
+    {
+        if (input_node.right != null)
+        {
+            if (input_node.right.code == "isCactusOnFront()")
+                if (isCactusOnFront())
+                {
+                    processNode(input_node.right.down);
+                }
+        }
+    }
+
+    private bool isCactusOnFront()
+    {
+        return FindObjectOfType<Dragon>().cactusOnFront;
+    }
+
     public void processNode(Node input_node)
     {
-        Debug.Log("processss");
+        
         Node temp = input_node;
         while (temp != null)
         {
@@ -179,26 +226,37 @@ public class DragonController : MonoBehaviour
 
             else if (temp.code == "moveForward()")
             {
-                MoveForward();
+                moveForward();
             }
 
-            else if (temp.code == "moveBackward()")
+            else if (temp.code == "IF")
             {
-                
+                processIf(temp);
             }
 
             else if (temp.code == "rotateLeft()")
             {
-                RotateLeft();
+                rotateLeft();
             }
 
             else if (temp.code == "rotateRight()")
             {
-                RotateRight();
+                rotateRight();
+            }
+
+            else if (temp.code == "fire()")
+            {
+                fire();
             }
             temp = temp.down;
         }
     }
+
+    private void fire()
+    {
+        StartCoroutine(Fire(5f));
+    }
+
     public string processNodeText(Node input_node, int count)
     {
         string code = "";
@@ -208,10 +266,27 @@ public class DragonController : MonoBehaviour
             if (temp.code == "LOOP")
             {
                 
-                code += processLoopText(temp, --count) + "\n";
+                if (checkloopError(temp))
+                    code += processLoopText(temp, --count) + "\n";
+                else
+                {
+                    return code;
+                }
+            }
+            if (temp.code == "IF")
+            {
+                if (IFerrors(input_node))
+                    code += processIfText(temp, --count) + "\n";
+                else
+                    return code;
             }
             else
-                code += temp.code + "\n";
+            {   
+                if (StatementError(temp))
+                    code += temp.code + "\n";
+                else
+                    return code;
+            }
 
             temp = temp.down;
         }
@@ -227,35 +302,69 @@ public class DragonController : MonoBehaviour
         string code = "";
         if (temp.right != null)
         {
-            int count = 0;
-            try
-            {
-                count = Int32.Parse(temp.right.code);
-            }
+            
 
-            catch
-            {
-                Debug.Log("");
-            }
-             
-            code = "for (int i = 0; i <" + count + "; i++) \n {";
-            code = code + processNodeText(temp.right.down, --count1) + "}";
+                int count = 0;
+                try
+                {
+                    count = Int32.Parse(temp.right.code);
+                }
+
+                catch
+                {
+                    Debug.Log("");
+                }
+
+                code = "for (int i = 0; i <" + count + "; i++) \n {";
+                code = code + processNodeText(temp.right.down, --count1) + "}";
+            
+            
         }
+        
+        return code;
+    }
+
+    private string processIfText(Node temp, int count1)
+    {
+        if (count1 == 0)
+            return null;
+        string code = "";
+        if (temp.right != null)
+        {
+            
+            
+            code = "if (" + temp.right.code + ") \n { \n";
+            code = code + processNodeText(temp.right.down, --count1) + "\n }";
+            return code;
+
+           
+        }
+        
         return code;
     }
 
     public void run()
     {
-        if (rootNode != null)
+        
+       if (rootNode != null)
         {
+            activateErrorCanvas(false);
             Debug.Log(rootNode.code);
-
-            processNode(rootNode);
+            errors = 0;
+            processNodeText(rootNode, 100);
+            if (errors == 0)
+                processNode(rootNode);
+            else
+            {
+                activateErrorCanvas(true);
+                errorText.text = "Fix the errors before running";
+            }
         }
         
     }
     public void processLoop(Node input_node)
     {
+        
         int count = Int32.Parse(input_node.right.code);
         for (int i = 0; i < count; i++)
         {
@@ -263,11 +372,123 @@ public class DragonController : MonoBehaviour
         }
     }
 
-    
+    public bool StatementError(Node inputNode)
+    {
+        
+        string[] _statements = { "moveForward()", "moveBackward()", "rotateRight()", "rotateLeft()", "fly()", "fire()" };
+        List<string> statements = new List<string>(_statements);
+
+        string a = inputNode.code;
+        if (statements.Contains(a))
+        {
+
+            if (inputNode.right != null)
+            {
+                activateErrorCanvas(true);
+                errorText.text = "Nothing is expected on the right of " + a +  " statement.";
+                Debug.LogError("Nothing is expected on the right of this statement.");
+                errors++;
+                return false;
+            }
+            else
+            {
+                activateErrorCanvas(false);
+            }
+        }
+        else
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public bool IFerrors(Node inputNode)
+    {
+        if (inputNode.right == null)
+        {
+            activateErrorCanvas(true);
+            errorText.text = "No condition found on the right of IF";
+            errors++;
+            return false;
+        }
+        string[] _if_errors = { "moveForward()", "moveBackward()", "rotateRight()", "rotateLeft()", "fly()", "firee()", "else","loop",
+                                "count", "if"};
+        List<string> if_errors = new List<string>(_if_errors);
+
+        for (int i = 0; i < if_errors.Count; i++)
+        { 
+
+            if (inputNode.right.code == if_errors[i])
+            {
+                activateErrorCanvas(true);
+                errorText.text = "This is not expected on the right of this IF statement.";
+                Debug.LogError("This is not expected on the right of this IF statement.");
+                errors++;
+                return false;
+            }
+        }
+
+        activateErrorCanvas(false);
+        return true;
+    }
+
+    /*public bool elseErrors(Node inputNode)
+    {
+        string[] _else_errors = { "Else", "tree", "hole", "stone", "Spikes", "barrier", "count" };
+        List<string> else_errors = new List<string>(_else_errors);
+
+        for (int i = 0; i < else_errors.Count; i++)
+        {
+            if (inputNode.right.code == else_errors[i])
+            {
+                Debug.LogError("This is not expected on the right of ELSE statement.");
+                return false;
+            }
+        }
+        return true;
+    }*/
+
+    public bool checkloopError(Node inputNode)
+    {
+        if (inputNode.right == null)
+        {
+            activateErrorCanvas(true);
+            errorText.text = "No condition found on the right of loop";
+            errors++;
+            return false;
+        }
+        //Uncomment this section when count work is done
+        /*if (inputNode.right.code != "count")
+        {
+            activateErrorCanvas(true);
+            errorText.text = "This is not expected on the right of Loop.";
+            Debug.LogError("This is not expected on the right of Loop.");
+            return false;
+        }
+
+        activateErrorCanvas(false);
+        return true;*/
+
+        //Comment this section when count work is done
+        try
+        {
+            Int32.Parse(inputNode.right.code);
+            return true;
+        }
+        catch
+        {
+            activateErrorCanvas(true);
+            errorText.text = "This is not expected on the right of Loop.";
+            Debug.LogError("This is not expected on the right of Loop.");
+            errors++;
+            return false;
+        }
+        
+    }
 
 
     // Update is called once per frame
-    
+
 
 
 }

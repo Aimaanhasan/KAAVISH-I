@@ -22,6 +22,7 @@ namespace GoogleARCore.Examples.Common
 {
     using System.Collections.Generic;
     using GoogleARCore;
+    using GoogleARCore.Examples.HelloAR;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -215,6 +216,8 @@ namespace GoogleARCore.Examples.Common
             if (Session.Status == SessionStatus.LostTracking &&
                 Session.LostTrackingReason != LostTrackingReason.None)
             {
+                FindObjectOfType<HelloARController>().spawned = false;
+
                 // The session has lost tracking.
                 m_FeaturePoints.SetActive(false);
                 m_HandAnimation.enabled = false;

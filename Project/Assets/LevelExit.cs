@@ -14,9 +14,10 @@ public class LevelExit : MonoBehaviour
     }
     private void Start()
     {
-        canvas = GameObject.FindGameObjectWithTag("LevelCompleteCanvas");
-        canvas.SetActive(false);
-        
+        canvas = FindObjectOfType<LevelLoader>().levelcompletecanvas;
+        if (canvas != null)
+            canvas.SetActive(false);
+        FindObjectOfType<StarHandler>().countCoins();
     }
     
     private void OnTriggerEnter(Collider collision)
@@ -24,8 +25,7 @@ public class LevelExit : MonoBehaviour
         canvas.SetActive(true);
         FindObjectOfType<StarHandler>().displayStars();
         
-
-
+        
     }
 
 }

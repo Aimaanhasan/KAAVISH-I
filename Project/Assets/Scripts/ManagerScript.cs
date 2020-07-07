@@ -23,9 +23,9 @@ public class ManagerScript : MonoBehaviour
     {
         PlayGamesScript.AddScoreToLeaderboard(GPGSIds.leaderboard_leaderboard, Counter);
 
-        if (Counter > CloudVariables.Highscore)
+        if (Counter > CloudVariables.ImportantValues[0])
         {
-            CloudVariables.Highscore = Counter;
+            CloudVariables.ImportantValues[0] = Counter;
             PlayGamesScript.Instance.SaveData();
             UIScript.Instance.UpdateHighscoreText();
         }

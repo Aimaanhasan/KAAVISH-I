@@ -2,5 +2,12 @@
 
 public class CloudVariables : MonoBehaviour
 {
-    public static int Highscore { get; set; }
+    public static int[] ImportantValues { get; set; }
+
+    // Start is called before the first frame update
+    void Awake()
+    {
+        ImportantValues = new int[4];
+    }
+
 }

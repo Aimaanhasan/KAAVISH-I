@@ -50,8 +50,14 @@ namespace GoogleARCore.Examples.HelloAR
         /// <summary>
         /// A prefab to place when a raycast from a user touch hits a horizontal plane.
         /// </summary>
-        public GameObject GameObjectHorizontalPlanePrefab;
+        
+        public GameObject[] chapter1Levels;
+        public GameObject[] chapter2Levels;
+        public GameObject[] chapter3Levels;
+        public GameObject[] chapter4Levels;
 
+        public int level;
+        public int chapter;
 
         public DragonController dragonController;
         /// <summary>
@@ -69,7 +75,7 @@ namespace GoogleARCore.Examples.HelloAR
         /// otherwise false.
         /// </summary>
         private bool m_IsQuitting = false;
-        private bool spawned = false;
+        public bool spawned = false;
         /// <summary>
         /// The Unity Awake() method.
         /// </summary>
@@ -78,8 +84,12 @@ namespace GoogleARCore.Examples.HelloAR
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
+            // new work
+            level = LevelLoader.level;
+            chapter = LevelLoader.chapter;
         }
 
+        
         /// <summary>
         /// The Unity Update() method.
         /// </summary>
@@ -114,7 +124,7 @@ namespace GoogleARCore.Examples.HelloAR
 
             if (Frame.Raycast(touch.position.x, touch.position.y, raycastFilter, out hit) && !spawned)
             {
-                var session = GameObject.Find("ARCore Device").GetComponent<ARCoreSession>(); session.SessionConfig.PlaneFindingMode = DetectedPlaneFindingMode.Disabled; session.SessionConfig.EnablePlaneFinding = false; session.OnEnable();
+                var session = GameObject.Find("ARCore Device").GetComponent<ARCoreSession>(); //session.SessionConfig.PlaneFindingMode = DetectedPlaneFindingMode.Disabled; session.SessionConfig.EnablePlaneFinding = false; session.OnEnable();
                 spawned = true;
                 // Use hit pose and camera pose to check if hittest is from the
                 // back of the plane, if it is, no need to create the anchor.
@@ -128,7 +138,11 @@ namespace GoogleARCore.Examples.HelloAR
                 {
                     // Choose the prefab based on the Trackable that got hit.
                     GameObject prefab;
-                    prefab = GameObjectHorizontalPlanePrefab;
+                    chapter = LevelLoader.chapter;
+                    level = LevelLoader.level;
+                    var levels = new [] { chapter1Levels, chapter2Levels, chapter3Levels, chapter4Levels };
+                    prefab = levels[chapter][level];
+                    //prefab = GameObjectHorizontalPlanePrefabs[level];
                     /*if (hit.Trackable is FeaturePoint)
                     {
                         //prefab = GameObjectPointPrefab;
@@ -146,6 +160,7 @@ namespace GoogleARCore.Examples.HelloAR
                     // Instantiate prefab at the hit pose.
                     var gameObject1 = Instantiate(prefab, hit.Pose.position, hit.Pose.rotation);
                     gameObject1.SetActive(true);
+                    FindObjectOfType<Timer>().StartTime();
                     // Compensate for the hitPose rotation facing away from the raycast (i.e.
                     // camera).
                     gameObject1.transform.Rotate(0, k_PrefabRotation, 0, Space.Self);

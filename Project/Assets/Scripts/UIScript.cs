@@ -54,6 +54,6 @@ public class UIScript : MonoBehaviour
 
     public void UpdateHighscoreText()
     {
-        highscoreTxt.text = CloudVariables.Highscore.ToString();
+        highscoreTxt.text = CloudVariables.ImportantValues[0].ToString();
     }
 }

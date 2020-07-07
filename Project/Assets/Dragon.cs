@@ -6,24 +6,40 @@ public class Dragon : MonoBehaviour
 {
     // Start is called before the first frame update
     Vector3 originalTransform;
-    public Transform dragonTransform;
+    //public Transform dragonTransform;
+    public bool cactusOnFront;
+    [SerializeField] ParticleSystem DragonFlame;
     void Start()
     {
-        originalTransform = dragonTransform.position;
-    }
-    private void OnCollisionEnter(Collision collision)
+        cactusOnFront = false;
+        originalTransform = transform.localPosition;
+    } 
+    
+    public void StartFire()
     {
-        
-        if (collision.gameObject.layer == 9)
-        {
-            Die();
-        }
+        DragonFlame.Play();
     }
 
-    void Die()
+    public void StopFire()
+    {
+        DragonFlame.Stop();
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+
+        if (collider.GetType() == typeof(BoxCollider2D))
+            if (collider.gameObject.layer == 9)
+            {
+                Debug.Log("Dragon dead");
+                Die();
+            }
+    }
+
+    public void Die()
     {
         
-        dragonTransform.position = originalTransform;
+        transform.localPosition = originalTransform;
     }
 
     // Update is called once per frame
